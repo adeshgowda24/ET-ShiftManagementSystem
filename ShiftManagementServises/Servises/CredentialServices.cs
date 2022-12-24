@@ -12,6 +12,7 @@ namespace ShiftManagementServises.Servises
     {
         UserCredential GetCredential(int UserID);
 
+        long addcredentil(UserCredential credential);
        
     }
     public class CredentialServices : ICredentialServices
@@ -21,6 +22,13 @@ namespace ShiftManagementServises.Servises
         public CredentialServices(ShiftManagementDbContext UserCredential)
         {
             _userCredential = UserCredential;
+        }
+
+        public long addcredentil(UserCredential credential)
+        {
+            _userCredential.UserCredentials.Add(credential);
+            _userCredential.SaveChanges();
+            return credential.UserID;
         }
 
         public UserCredential GetCredential(int UserID)

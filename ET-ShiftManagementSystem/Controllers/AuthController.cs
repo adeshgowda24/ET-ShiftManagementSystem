@@ -37,11 +37,25 @@ namespace ET_ShiftManagementSystem.Controllers
         {
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] PasswordSalt);
 
+
             Users.UserName = request.UserName;
             Users.PasswordHash = passwordHash;
             Users.PasswordSalt = PasswordSalt;
+            var cred = new UserCredential();
+            {
+                //Users.UserName = request.UserName;
+                cred.PasswordHash = passwordHash;
+                cred.PasswordSalt = PasswordSalt;
 
-            return Ok(Users);
+            
+                cred.UserName = request.UserName;
+                cred.Password = request.Password;
+            }
+            _credentialServices.addcredentil(cred);
+
+
+           // return Ok(Users);
+            return Ok(cred);
 
         }
 
@@ -49,6 +63,7 @@ namespace ET_ShiftManagementSystem.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<string>> Login(UserDto request)
         {
+            //var cred = new UserCredential();
             if (Users.UserName != request.UserName)
             {
                 return BadRequest("user not exist"); 

@@ -76,7 +76,7 @@ namespace ET_ShiftManagementSystem.Controllers
                 {
                     CommentText = value.CommentText,
                     CreatedDate= value.CreatedDate,
-                    EmployeeName= projectDetailsData.ProjectUsers.FirstOrDefault(a => a.UserId==value.UserID).UserName,
+                    EmployeeName = projectDetailsData.ProjectUsers.FirstOrDefault(a => a.UserId==value.UserID).UserName,
                     ShiftID= value.ShiftID,
                     UserID  = value.UserID,
                     Shift = projectDetailsData.ProjectUsers.FirstOrDefault(a => a.ShiftID == value.ShiftID).ShiftName
