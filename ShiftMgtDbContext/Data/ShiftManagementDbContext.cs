@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿//using ShiftManagementServises.Servises;
+using Microsoft.EntityFrameworkCore;
 using ShiftMgtDbContext.Entities;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,22 @@ namespace ShiftMgtDbContext.Data
         {
                 
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User_Role>()
+                .HasOne(x => x.Role)
+                .WithMany(y => y.UserRoles)
+                .HasForeignKey(x => x.RoleId);
+            modelBuilder.Entity<User_Role>()
+                .HasOne(x => x.User)
+                .WithMany(y => y.UserRoles)
+                .HasForeignKey(x => x.Userid);
+
+        }
 
         public DbSet<Project> projects { get; set; }
 
-        public DbSet<User> users { get; set; }
+        //public DbSet<User> users { get; set; }
 
         public DbSet<ProjectDetail> projectDetails { get; set; }
 
@@ -27,9 +40,14 @@ namespace ShiftMgtDbContext.Data
        
         public DbSet<Comment> Comments { get; set; }
 
-        public DbSet<UserCredential> UserCredentials { get; set; }
+        // public DbSet<UserCredential> UserCredentials { get; set; }
 
-        public DbSet<UserRole> UserRoles { get; set; }
-       
+        //public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<User> users { get; set; }
+
+        public DbSet<Role> roles { get; set; }
+
+        public DbSet<User_Role> usersRoles { get; set; }
+
     }
 }

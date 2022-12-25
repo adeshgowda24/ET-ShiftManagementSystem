@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using ShiftMgtDbContext.Entities;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,35 +20,37 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<Program>());
+
 builder.Services.AddScoped<IProjectServises, ProjectServises>();
 builder.Services.AddScoped<IProjectDatailServises, ProjectDatailServises>();
-builder.Services.AddScoped<IUserServices, UserServices>();
+//builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IShiftServices, ShiftServices>();
 builder.Services.AddScoped<ICommentServices, CommentServices>();
-builder.Services.AddScoped<ICredentialServices, CredentialServices>();
+//builder.Services.AddScoped<ICredentialServices, CredentialServices>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ShiftManagementDbContext>().AddDefaultTokenProviders();
 
 //for Authentication 
-builder.Services.AddAuthentication(option =>
-       {
-           option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-           option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-           option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-       }).AddJwtBearer(options =>
-       {
-           options.TokenValidationParameters = new TokenValidationParameters
-           {
-               ValidateIssuer = true,
-               ValidateAudience = true,
-               ValidateLifetime = true,
-               ValidateIssuerSigningKey = true,
-               ValidIssuer = builder.Configuration["Jwt:Issuer"],
-               ValidAudience = builder.Configuration["Jwt:Audience"],
-               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-           };
-       });
+//builder.Services.AddAuthentication(option =>
+//       {
+//           option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//           option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//           option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+//       }).AddJwtBearer(options =>
+//       {
+//           options.TokenValidationParameters = new TokenValidationParameters
+//           {
+//               ValidateIssuer = true,
+//               ValidateAudience = true,
+//               ValidateLifetime = true,
+//               ValidateIssuerSigningKey = true,
+//               ValidIssuer = builder.Configuration["Jwt:Issuer"],
+//               ValidAudience = builder.Configuration["Jwt:Audience"],
+//               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+//           };
+//       });
 
 
 
@@ -60,6 +63,26 @@ builder.Services.AddAuthentication(option =>
 //for entity framework
 builder.Services.AddDbContext<ShiftManagementDbContext>(option => option.UseSqlServer
 (builder.Configuration.GetConnectionString("ProjectAPIConnectioString")));
+
+
+
+builder.Services.AddScoped<ITokenHandler, ShiftManagementServises.Servises.TokenHandler>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+{
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateIssuerSigningKey = true,
+    ValidateLifetime = true,
+    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+    ValidAudience = builder.Configuration["Jwt:Audience"],
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+
+});
 
 
 var app = builder.Build();

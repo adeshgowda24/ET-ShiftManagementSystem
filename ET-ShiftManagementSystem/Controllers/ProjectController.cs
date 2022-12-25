@@ -15,16 +15,16 @@ namespace ET_ShiftManagementSystem.Controllers
     {
         private readonly IProjectServises _projectServices;
         private readonly IProjectDatailServises _projectDatailServises;
-        private readonly IUserServices _userServices;
+        //private readonly IUserServices _userServices;
         private readonly IShiftServices _shiftServices;
         private readonly ICommentServices _commentServices;
         private readonly IMapper mapper;
 
-        public ProjectController(IProjectServises projectServices, IProjectDatailServises projectDatailServises , IUserServices userServices, IShiftServices shiftServices, ICommentServices commentServices , IMapper mapper)
+        public ProjectController(IProjectServises projectServices, IProjectDatailServises projectDatailServises, /*IUserServices userServices*/ IShiftServices shiftServices, ICommentServices commentServices , IMapper mapper)
         {
             _projectServices = projectServices;
             _projectDatailServises = projectDatailServises;
-            _userServices = userServices;
+            //_userServices = userServices;
             _shiftServices = shiftServices;
             _commentServices = commentServices;
             this.mapper = mapper;
@@ -48,27 +48,27 @@ namespace ET_ShiftManagementSystem.Controllers
             
             foreach ( var item in projectData)
             {
-                var userDetail = _userServices.GetUserDetails(item.UserID);
-                var projectUser = new ProjectUser()
-                {
-                    UserId = item.UserID,
-                    UserName = userDetail.UserName,
-                    FullName = userDetail.FullName,
-                    Email = userDetail.Email,
+                //var userDetail = _userServices.GetUserDetails(item.UserID);
+                //var projectUser = new ProjectUser()
+                //{
+                //    UserId = item.UserID,
+                //    UserName = userDetail.UserName,
+                //    FullName = userDetail.FullName,
+                //    Email = userDetail.Email,
 
-                };
-                if (item.ShiftID.HasValue)
-                {
-                    var shiftDetails = _shiftServices.GetShiftDetails(item.ShiftID.Value);
-                    if (shiftDetails != null) 
-                    {
-                        projectUser.ShiftID = item.ShiftID.Value;
-                        projectUser.ShiftName = shiftDetails.ShiftName;
+                //};
+                //if (item.ShiftID.HasValue)
+                //{
+                //    var shiftDetails = _shiftServices.GetShiftDetails(item.ShiftID.Value);
+                //    if (shiftDetails != null) 
+                //    {
+                //        projectUser.ShiftID = item.ShiftID.Value;
+                //        projectUser.ShiftName = shiftDetails.ShiftName;
 
-                    }
-                };
+                //    }
+                //};
 
-                projectDetailsData.ProjectUsers.Add(projectUser);
+                //projectDetailsData.ProjectUsers.Add(projectUser);
 
                 
             }
