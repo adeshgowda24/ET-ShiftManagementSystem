@@ -20,32 +20,34 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IProjectServises, ProjectServises>();
-builder.Services.AddScoped<IProjectDatailServises , ProjectDatailServises>();
+builder.Services.AddScoped<IProjectDatailServises, ProjectDatailServises>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IShiftServices, ShiftServices>();
 builder.Services.AddScoped<ICommentServices, CommentServices>();
 builder.Services.AddScoped<ICredentialServices, CredentialServices>();
 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ShiftManagementDbContext>().AddDefaultTokenProviders();
-      
+
 //for Authentication 
 builder.Services.AddAuthentication(option =>
        {
            option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
            option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
            option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-       }).AddJwtBearer(options => {
-               options.TokenValidationParameters = new TokenValidationParameters
-                {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-});
+       }).AddJwtBearer(options =>
+       {
+           options.TokenValidationParameters = new TokenValidationParameters
+           {
+               ValidateIssuer = true,
+               ValidateAudience = true,
+               ValidateLifetime = true,
+               ValidateIssuerSigningKey = true,
+               ValidIssuer = builder.Configuration["Jwt:Issuer"],
+               ValidAudience = builder.Configuration["Jwt:Audience"],
+               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+           };
+       });
 
 
 

@@ -1,4 +1,5 @@
-﻿using ShiftMgtDbContext.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ShiftMgtDbContext.Data;
 using ShiftMgtDbContext.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,14 @@ namespace ShiftManagementServises.Servises
 {
     public interface ICommentServices
     {
-     List<Comment> GetComment(int commentid);
+        Task<IEnumerable<Comment>> GetAllCommentsAsync();
+        Task<Comment> GetComment(int commentid);
+
+        long  AddComment(Comment comment);
+
+        Task<Comment> DeleteCommentAsync(int id);
+
+        Task<Comment> UpdateCommentAsync(int id, Comment comment);
     }
 
     public  class CommentServices : ICommentServices
@@ -21,9 +29,63 @@ namespace ShiftManagementServises.Servises
         {
             _commnet= comment;
         }
-        public List<Comment> GetComment(int commentid)
+
+        public  long AddComment(Comment comment)
         {
-            return _commnet.Comments.Where(x => x.CommentID == commentid).ToList();
+             _commnet.Comments.Add(comment);
+             _commnet.SaveChanges();
+            return comment.CommentID;
+        }
+
+        public async Task<Comment> DeleteCommentAsync(int id)
+        {
+            var comment = await _commnet.Comments.FirstOrDefaultAsync(r => r.CommentID == id);
+
+            if (comment == null)
+            {
+                return null;
+            }
+
+            //delete the region
+            _commnet.Comments.Remove(comment);
+            await _commnet.SaveChangesAsync();
+
+
+            return comment;
+
+        }
+
+        public async Task<IEnumerable<Comment>> GetAllCommentsAsync()
+        {
+            return await _commnet.Comments.ToListAsync();
+        }
+
+        public async  Task<Comment> GetComment(int commentid)
+        {
+            return await _commnet.Comments.FirstOrDefaultAsync(x => x.CommentID == commentid);
+        }
+
+        public async Task<Comment> UpdateCommentAsync(int Id, Comment comment)
+        {
+            var existingComment = await _commnet.Comments.FirstOrDefaultAsync(x => x.CommentID == Id);
+
+            if (existingComment == null)
+            {
+                return null;
+
+            }
+
+            existingComment.CommentID = comment.CommentID;
+            existingComment.CommentText = comment.CommentText;
+            //existingComment.ShiftID= comment.ShiftID;
+            existingComment.Shared  = comment.Shared;
+            //existingComment.UserID= comment.UserID;
+            existingComment.CreatedDate= comment.CreatedDate;
+
+           
+            await _commnet.SaveChangesAsync();
+
+            return existingComment;
         }
     }
 }

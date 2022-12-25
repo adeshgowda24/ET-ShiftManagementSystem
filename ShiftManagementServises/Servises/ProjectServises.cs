@@ -1,14 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using ShiftMgtDbContext.Data;
 using ShiftMgtDbContext.Entities;
-
+using System.Runtime.InteropServices;
 
 namespace Servises.ProjectServises
 {
     public interface IProjectServises
     {
-        Project GetProject(int ProjectId);
-        long AddProject(Project project);
+        Task<Project> GetProject(int ProjectId);
+        long AddProjectAsync(Project project);
+
+        Task<Project> GetProjectAsync(int id);
+        public Task<IEnumerable<Project>> GetAllAsync();
+
+        Task<Project> DeleteProjectAsync(int id);
+
+        Task<Project> UpdateAsync(int Id, Project Project);
     }
 
     public class ProjectServises : IProjectServises
@@ -19,19 +27,69 @@ namespace Servises.ProjectServises
             _shiftDbContext = shiftDbContext;
         }
 
-        public long AddProject(Project project)
+        public  long AddProjectAsync(Project project)
         {
-            _shiftDbContext.projects.Add(project);
-            _shiftDbContext.SaveChanges();
+            
+             _shiftDbContext.projects.Add(project);
+           _shiftDbContext.SaveChanges();
             return project.ProjectId;
         }
 
+        public async Task<Project> DeleteProjectAsync(int id)
+        {   
+            var project = await _shiftDbContext.projects.FirstOrDefaultAsync(r => r.ProjectId == id);
+
+                if (project == null)
+                {
+                    return null;
+                }
+
+                //delete the region
+                _shiftDbContext.projects.Remove(project);
+                await _shiftDbContext.SaveChangesAsync();
 
 
-        public Project GetProject(int ProjectId)
-        {
-            return _shiftDbContext.projects.AsNoTracking().FirstOrDefault(a => a.ProjectId == ProjectId);
+                return project;
+            
         }
 
+        public async  Task<IEnumerable<Project>> GetAllAsync()
+        {
+            return await _shiftDbContext.projects.ToListAsync();
+        }
+
+        public async Task<Project> GetProject(int ProjectId)
+        {
+            return await _shiftDbContext.projects.AsNoTracking().FirstOrDefaultAsync(a => a.ProjectId == ProjectId);
+        }
+
+        public async Task<Project> GetProjectAsync(int id)
+        {
+            return await _shiftDbContext.projects.FirstOrDefaultAsync(r => r.ProjectId == id);
+        }
+
+        public async Task<Project> UpdateAsync(int Id, Project Project)
+        {
+            var existingProject = await _shiftDbContext.projects.FirstOrDefaultAsync(x => x.ProjectId == Id);
+
+            if (existingProject == null)
+            {
+                return null;
+
+            }
+
+            existingProject.ProjectName = Project.ProjectName;
+            existingProject.Description = Project.Description;
+            existingProject.ClientName = Project.ClientName;
+            existingProject.ModifieBy = Project.ModifieBy;
+            existingProject.ModifieDate = Project.ModifieDate;
+            existingProject.CreatedDate = Project.CreatedDate;
+            existingProject.IsActive = Project.IsActive;
+            existingProject.CreatedBy = Project.CreatedBy;
+
+            await _shiftDbContext.SaveChangesAsync();
+
+            return existingProject;
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace ET_ShiftManagementSystem.Models
         public ProjectDetailsDTO()
         {
             ProjectUsers = new List<ProjectUser>();
-            CommentDetiles = new List<CommentDetailes>() ;
+            //CommentDetiles = new CommentDetailes>() ;
            // ShiftDetails = new List<ShiftDetails>();
         }
         public string ProjectName { get; set; }
@@ -53,9 +53,11 @@ namespace ET_ShiftManagementSystem.Models
 
     public class CommentDetailes
     {
+        public int CommentID { get; set; }
         public string CommentText { get; set; }
 
         public string EmployeeName { get; set; }
+
         public int ShiftID { get; set; }
 
         public int UserID { get; set; }

@@ -5,10 +5,11 @@ using ShiftMgtDbContext.Entities;
 using ShiftMgtDbContext.Data;
 using ET_ShiftManagementSystem.Models;
 using ShiftManagementServises.Servises;
+using AutoMapper;
 
 namespace ET_ShiftManagementSystem.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ProjectController : ControllerBase
     {
@@ -17,21 +18,23 @@ namespace ET_ShiftManagementSystem.Controllers
         private readonly IUserServices _userServices;
         private readonly IShiftServices _shiftServices;
         private readonly ICommentServices _commentServices;
+        private readonly IMapper mapper;
 
-        public ProjectController(IProjectServises projectServices, IProjectDatailServises projectDatailServises , IUserServices userServices, IShiftServices shiftServices, ICommentServices commentServices)
+        public ProjectController(IProjectServises projectServices, IProjectDatailServises projectDatailServises , IUserServices userServices, IShiftServices shiftServices, ICommentServices commentServices , IMapper mapper)
         {
             _projectServices = projectServices;
             _projectDatailServises = projectDatailServises;
             _userServices = userServices;
             _shiftServices = shiftServices;
-            _commentServices = commentServices; 
+            _commentServices = commentServices;
+            this.mapper = mapper;
         }
-        [Route("{projectId}")]
+        [Route("Details/{projectId}")]
         [HttpGet]
-        public IActionResult GetProjectDetails(int projectId)
+        public async Task<IActionResult> GetProjectDetails(int projectId)
         {
             var projectDetailsData = new ProjectDetailsDTO();
-            var projectdetail = _projectServices.GetProject(projectId);
+            var projectdetail = await _projectServices.GetProject(projectId);
             projectDetailsData.ProjectName= projectdetail.ProjectName;
             projectDetailsData.ClientName= projectdetail.ClientName;
             projectDetailsData.Description = projectdetail.Description;
@@ -39,7 +42,7 @@ namespace ET_ShiftManagementSystem.Controllers
             var projectData = _projectDatailServises.GetProjecDetails(projectId);
 
 
-            var CommentDetail = _commentServices.GetComment(projectId);
+            var CommentDetail = await _commentServices.GetComment(projectId);
 
             var ShiftDetail = _shiftServices.GetShiftDetails(projectId);
             
@@ -69,28 +72,56 @@ namespace ET_ShiftManagementSystem.Controllers
 
                 
             }
-            foreach (var value in CommentDetail)
-            {
-                var Comment = _commentServices.GetComment(value.CommentID);
-                var userComment = new CommentDetailes()
-                {
-                    CommentText = value.CommentText,
-                    CreatedDate= value.CreatedDate,
-                    EmployeeName = projectDetailsData.ProjectUsers.FirstOrDefault(a => a.UserId==value.UserID).UserName,
-                    ShiftID= value.ShiftID,
-                    UserID  = value.UserID,
-                    Shift = projectDetailsData.ProjectUsers.FirstOrDefault(a => a.ShiftID == value.ShiftID).ShiftName
-                };
-                projectDetailsData.CommentDetiles.Add(userComment);
-            }
+            ////foreach (var value in CommentDetail)
+            //{
+            //    var Comment = _commentServices.GetComment(value.CommentID);
+            //    var userComment = new CommentDetailes()
+            //    {
+            //        CommentText = value.CommentText,
+            //        CreatedDate= value.CreatedDate,
+            //        EmployeeName = projectDetailsData.ProjectUsers.FirstOrDefault(a => a.UserId==value.UserID).UserName,
+            //        ShiftID= value.ShiftID,
+            //        UserID  = value.UserID,
+            //        Shift = projectDetailsData.ProjectUsers.FirstOrDefault(a => a.ShiftID == value.ShiftID).ShiftName
+            //    };
+            //    projectDetailsData.CommentDetiles.Add(userComment);
+            //}
                 
 
             return Ok(projectDetailsData);
         }
 
+        [HttpGet]
+        [Route("/allProject")]
+        public async Task<IActionResult> GetAllProjects()
+        {
+            var project = await _projectServices.GetAllAsync();
+
+           var ProjectDTO = mapper.Map<List<Models.ProjectDto>>(project);
+
+            return Ok(ProjectDTO);
+
+        }
+
+        [HttpGet]
+        [Route("/singleProject")]
+        [ActionName("GetProjectAsync")]
+        public async Task<IActionResult> GetProjectAsync(int id)
+        {
+            var project = await _projectServices.GetProjectAsync(id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            var projectDTO = mapper.Map<Models.ProjectDto>(project);
+
+            return Ok(project);
+        }
 
         [HttpPost]
-        public IActionResult AddProject(ProjectDto projectDto)
+        public  IActionResult AddProjectASync(Project projectDto)
         {
             var Proj = new Project()
             {
@@ -104,14 +135,29 @@ namespace ET_ShiftManagementSystem.Controllers
                 IsActive = projectDto.IsActive
             };
 
-            _projectServices.AddProject(Proj);    
+             _projectServices.AddProjectAsync(Proj); 
 
+            ////Conevrt back to dto
+            //var projectDTO = new Models.ProjectDto()
+            //{
+            //    ProjectId = Proj.ProjectId,
+            //    ProjectName = Proj.ProjectName,
+            //    Description = Proj.Description,
+            //    ClientName = Proj.ClientName,
+            //    CreatedBy = Proj.CreatedBy,
+            //    ModifieBy= Proj.ModifieBy,
+            //    IsActive    = Proj.IsActive,
+
+
+            //}
+
+            //return CreatedAtAction(nameof())
             return Ok(Proj);
         }
       
 
         [HttpPut]
-        public IActionResult UpdateProject(ProjectDto ProjectDto) 
+        public async Task<IActionResult> UpdateProject(int id , Project ProjectDto) 
         {
             var Project = new Project()
             {
@@ -125,9 +171,36 @@ namespace ET_ShiftManagementSystem.Controllers
                 IsActive = ProjectDto.IsActive
             };
 
-            //_projectServices.UpdateProject(Project);
+            await _projectServices.UpdateAsync(id ,Project);
 
             return Ok(Project);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteProject(int id)
+        {
+            var delete = await _projectServices.DeleteProjectAsync(id);
+
+            if (delete == null)
+            {
+                NotFound();
+            }
+
+            //Convert response back to DTO
+
+            var DeleteDTO = new Models.ProjectDto()
+            {
+                ProjectId = delete.ProjectId,
+                CreatedBy = delete.CreatedBy,
+                ClientName = delete.ClientName,
+                ModifieBy = delete.ModifieBy,
+                Description = delete.Description,
+                IsActive = delete.IsActive,
+                ProjectName = delete.ProjectName
+
+            };
+
+            return Ok(DeleteDTO);
         }
 
         
