@@ -6,6 +6,8 @@ using ShiftMgtDbContext.Data;
 using ET_ShiftManagementSystem.Models;
 using ShiftManagementServises.Servises;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace ET_ShiftManagementSystem.Controllers
 {
@@ -31,6 +33,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
         [Route("Details/{projectId}")]
         [HttpGet]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetProjectDetails(int projectId)
         {
             var projectDetailsData = new ProjectDetailsDTO();
@@ -93,6 +96,7 @@ namespace ET_ShiftManagementSystem.Controllers
 
         [HttpGet]
         [Route("/allProject")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllProjects()
         {
             var project = await _projectServices.GetAllAsync();
@@ -106,6 +110,7 @@ namespace ET_ShiftManagementSystem.Controllers
         [HttpGet]
         [Route("/singleProject")]
         [ActionName("GetProjectAsync")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetProjectAsync(int id)
         {
             var project = await _projectServices.GetProjectAsync(id);
@@ -121,6 +126,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "writer")]
         public  IActionResult AddProjectASync(Project projectDto)
         {
             var Proj = new Project()
@@ -157,6 +163,7 @@ namespace ET_ShiftManagementSystem.Controllers
       
 
         [HttpPut]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> UpdateProject(int id , Project ProjectDto) 
         {
             var Project = new Project()
@@ -177,6 +184,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> DeleteProject(int id)
         {
             var delete = await _projectServices.DeleteProjectAsync(id);

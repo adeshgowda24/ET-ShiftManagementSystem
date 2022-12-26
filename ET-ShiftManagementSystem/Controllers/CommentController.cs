@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using ET_ShiftManagementSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShiftManagementServises.Servises;
 using ShiftMgtDbContext.Data;
 using ShiftMgtDbContext.Entities;
+using System.Data;
 
 namespace ET_ShiftManagementSystem.Controllers
 {
@@ -21,6 +23,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetCommentDetails(int id)
         {
             var commnet = await commentServices.GetComment(id);
@@ -37,6 +40,7 @@ namespace ET_ShiftManagementSystem.Controllers
 
         [HttpGet]
         [Route("/allComment")]
+        [Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllComments()
         {
             var comment = await commentServices.GetAllCommentsAsync();
@@ -47,7 +51,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpPost]
-
+        [Authorize(Roles = "reader")]
         public IActionResult AddComment(ShiftMgtDbContext.Entities.Comment comment)
         {
             var com = new ShiftMgtDbContext.Entities.Comment()
@@ -84,6 +88,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var delete = await commentServices.DeleteCommentAsync(id);
@@ -110,7 +115,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpPut]
-
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> UpdateComment(int id ,Models.UpdateCommentRequest comment)
         {
             var com = new ShiftMgtDbContext.Entities.Comment()
