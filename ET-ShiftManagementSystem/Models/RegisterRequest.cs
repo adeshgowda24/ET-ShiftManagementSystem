@@ -1,10 +1,8 @@
-﻿using System.Globalization;
-
-namespace ET_ShiftManagementSystem.Models
+﻿namespace ET_ShiftManagementSystem.Models
 {
-    public class UserDto
+    public class RegisterRequest
     {
-        public Guid id { get; set; }
+        //public Guid id { get; set; }
 
         public string username { get; set; }
 
@@ -15,7 +13,5 @@ namespace ET_ShiftManagementSystem.Models
         public string FirstName { get; set; }
 
         public string LastName { get; set; } = string.Empty;
-
-        public bool IsActive { get; set; }
     }
 }

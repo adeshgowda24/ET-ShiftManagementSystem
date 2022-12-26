@@ -16,10 +16,45 @@ namespace ET_ShiftManagementSystem.Controllers
             this.userRepository = userRepository;
             this.tokenHandler = tokenHandler;
         }
+        [HttpPost]
+        [Route("Register")]
+        public async Task<IActionResult> Register(Models.RegisterRequest registerRequest)
+        {
+            //request DTO to Domine Model
+            var user = new ShiftMgtDbContext.Entities.User()
+            {
+                username = registerRequest.username,
+                FirstName = registerRequest.FirstName,
+                LastName = registerRequest.LastName,
+                Email = registerRequest.Email,
+                password = registerRequest.password
+            };
+
+            // pass details to repository 
+
+            user = await userRepository.RegisterAsync(user);
+
+            //convert back to DTO
+            var UserDTO = new Models.UserDto
+            {
+                id = user.id,
+                username = user.username,
+                FirstName = user.FirstName,
+                Email = user.Email,
+                LastName = user.LastName,
+                password = user.password,
+                IsActive = user.IsActive
+            };
+
+            return CreatedAtAction(nameof(LoginAync), new { id = UserDTO.id }, UserDTO);
+
+        }
+
 
 
         [HttpPost]
         [Route("Login")]
+        [ActionName("LoginAync")]
         public async Task<IActionResult> LoginAync(Models.LoginRequest loginRequest)
         {
             //verify the incoming request 

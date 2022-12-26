@@ -9,6 +9,8 @@ namespace ShiftManagementServises.Servises
     public interface IUserRepository
     {
         Task<User> AuthenticateAsync(string username, string password);
+
+        Task<User> RegisterAsync(User user);
     }
     public class UserRepository : IUserRepository
 
@@ -46,6 +48,15 @@ namespace ShiftManagementServises.Servises
 
             user.password = null;
             return user;
+        }
+
+        public async Task<User> RegisterAsync(User user)
+        {
+            user.id = Guid.NewGuid();
+            await _ShiftManagementDbContext.users.AddAsync(user);
+            await _ShiftManagementDbContext.SaveChangesAsync();
+            return user;
+            
         }
     }
 }
