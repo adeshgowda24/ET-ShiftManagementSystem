@@ -45,7 +45,7 @@ namespace ET_ShiftManagementSystem.Controllers
         {
             var comment = await commentServices.GetAllCommentsAsync();
 
-            var CommentDTO = mapper.Map<List<Models.CommentDetailes>>(comment);
+            List<CommentDetailes> CommentDTO = mapper.Map<List<Models.CommentDetailes>>(comment);
 
             return Ok(CommentDTO);
         }
