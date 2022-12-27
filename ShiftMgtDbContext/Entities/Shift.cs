@@ -19,7 +19,7 @@ namespace ShiftMgtDbContext.Entities
 
         public DateTime EndTime { get; set; }
 
-        [ForeignKey("ShiftId")]
-        public virtual Comment? CommentDetail { get; set; }
+        //[ForeignKey("ShiftId")]
+        //public virtual Comment? CommentDetail { get; set; }
     }
 }

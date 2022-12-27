@@ -23,7 +23,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCommentDetails(int id)
         {
             var commnet = await commentServices.GetComment(id);
@@ -40,7 +40,7 @@ namespace ET_ShiftManagementSystem.Controllers
 
         [HttpGet]
         [Route("/allComment")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllComments()
         {
             var comment = await commentServices.GetAllCommentsAsync();
@@ -51,7 +51,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult AddComment(ShiftMgtDbContext.Entities.Comment comment)
         {
             var com = new ShiftMgtDbContext.Entities.Comment()
@@ -89,7 +89,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles = "SuperAdmin")]
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var delete = await commentServices.DeleteCommentAsync(id);
@@ -116,7 +116,7 @@ namespace ET_ShiftManagementSystem.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "SuperAdmin")]
+        //[Authorize(Roles = "SuperAdmin")]
         public async Task<IActionResult> UpdateComment(int id ,Models.UpdateCommentRequest comment)
         {
             var com = new ShiftMgtDbContext.Entities.Comment()

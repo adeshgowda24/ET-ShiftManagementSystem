@@ -23,7 +23,8 @@ namespace ShiftManagementServises.Servises
         public List<ProjectDetail> GetProjecDetails(int ProjectID)
         {
 
-            return _shiftDbContext.projectDetails.Where(pro => pro.ProjectDetailsID == ProjectID).ToList();
+            return _shiftDbContext.projectDetails.Where(pro => pro.ProjectDetailsID == ProjectID)
+                .ToList();
         }
 
 

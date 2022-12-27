@@ -10,8 +10,8 @@ namespace ET_ShiftManagementSystem.AddValidation
             RuleFor(s => s.CreatedDate).NotEmpty();
             RuleFor(s => s.Shared).NotEmpty();
             RuleFor(s => s.ShiftID).NotEmpty();
-            RuleFor(s => s.UserID).NotEmpty();
-            RuleFor(s => s.CommentID).NotEmpty();
+            //RuleFor(s => s.UserID).NotEmpty();
+           // RuleFor(s => s.CommentID).NotEmpty();
 
         }
     }
