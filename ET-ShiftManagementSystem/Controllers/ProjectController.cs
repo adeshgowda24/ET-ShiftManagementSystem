@@ -45,7 +45,7 @@ namespace ET_ShiftManagementSystem.Controllers
             var projectData = _projectDatailServises.GetProjecDetails(projectId);
 
 
-            var CommentDetail = await _commentServices.GetComment(projectId);
+            //var CommentDetail = await _commentServices.GetComment(projectId);
 
             var ShiftDetail = _shiftServices.GetShiftDetails(projectId);
             

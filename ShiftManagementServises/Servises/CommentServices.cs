@@ -12,7 +12,7 @@ namespace ShiftManagementServises.Servises
     public interface ICommentServices
     {
         Task<IEnumerable<Comment>> GetAllCommentsAsync();
-        Task<Comment> GetComment(int commentid);
+        Task<Comment> GetCommentByID(int commentid);
 
         long  AddComment(Comment comment);
 
@@ -60,7 +60,7 @@ namespace ShiftManagementServises.Servises
             return await _commnet.Comments.ToListAsync();
         }
 
-        public async  Task<Comment> GetComment(int commentid)
+        public async  Task<Comment> GetCommentByID(int commentid)
         {
             return await _commnet.Comments.FirstOrDefaultAsync(x => x.CommentID == commentid);
         }

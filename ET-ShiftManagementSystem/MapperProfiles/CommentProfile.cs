@@ -6,7 +6,7 @@ namespace ET_ShiftManagementSystem.MapperProfiles
     {
         public CommentProfile()
         {
-            CreateMap<ShiftMgtDbContext.Entities.Comment, Models.CommentDetailes>().ReverseMap();
+            CreateMap<ShiftMgtDbContext.Entities.Comment, Models.CommentDTO>().ReverseMap();
         }
     }
 }

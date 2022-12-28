@@ -6,6 +6,7 @@ using ShiftManagementServises.Servises;
 using ShiftMgtDbContext.Data;
 using ShiftMgtDbContext.Entities;
 using System.Data;
+using System.Drawing.Drawing2D;
 
 namespace ET_ShiftManagementSystem.Controllers
 {
@@ -14,46 +15,87 @@ namespace ET_ShiftManagementSystem.Controllers
     public class CommentController : Controller
     {
         private readonly ICommentServices commentServices;
-        private readonly IMapper mapper;
+        //private readonly IMapper mapper;
 
-        public CommentController(ICommentServices commentServices , IMapper mapper)
+        public CommentController(ICommentServices commentServices )
         {
             this.commentServices = commentServices;
-            this.mapper = mapper;
+            //this.mapper = mapper;
         }
 
         [HttpGet]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetCommentDetails(int id)
+        public async Task<ActionResult<Comment>> GetCommentDetails(int id)
         {
-            var commnet = await commentServices.GetComment(id);
+            var comment = await commentServices.GetCommentByID(id);
 
-            if (commnet == null)
+            if (comment == null)
             {
                 return NotFound();
             }
+            //var RegionDTO = new Models.CommentDTO();
+            //comment.ToList().ForEach(comment =>
+            //{
+                var regionDTO = new Models.CommentDTO()
+                {
+                    CommentID = comment.CommentID,
+                    CommentText = comment.CommentText,
+                    CreatedDate = comment.CreatedDate,
+                    Shared = comment.Shared,
+                    ShiftID = comment.ShiftID,
+                    UserID = comment.UserID,
+                    //Population = regions.Population
 
-            var CommentDTO = mapper.Map<Models.CommentDetailes>(commnet);
+                };
+                //Add(regionDTO);
 
-            return Ok(CommentDTO);
+
+            //});
+            //var CommentDTO = mapper.Map<Models.CommentDTO>(commnet);
+
+            return Ok(regionDTO);
         }
 
         [HttpGet]
         [Route("/allComment")]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAllComments()
+        public async Task<ActionResult<IEnumerable<Comment>>> GetAllComments()
         {
             var comment = await commentServices.GetAllCommentsAsync();
 
-            List<CommentDetailes> CommentDTO = mapper.Map<List<Models.CommentDetailes>>(comment);
+            //retur dto regions
+            var RegionDTO = new List<Models.CommentDTO>();
+            comment.ToList().ForEach(comment =>
+            {
+                var regionDTO = new Models.CommentDTO()
+                {
+                    CommentID = comment.CommentID,
+                    CommentText = comment.CommentText,
+                    CreatedDate = comment.CreatedDate,
+                    Shared = comment.Shared,
+                    ShiftID  = comment.ShiftID,
+                    UserID = comment.UserID,
+                    //Population = regions.Population
 
-            return Ok(CommentDTO);
+                };
+                RegionDTO.Add(regionDTO);
+
+
+            });
+
+            //var CommentDTO = mapper.Map<List<Models.CommentDTO>>(comment);
+
+            return Ok(RegionDTO);
         }
 
         [HttpPost]
         //[Authorize(Roles = "Admin")]
         public IActionResult AddComment(ShiftMgtDbContext.Entities.Comment comment)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
             var com = new ShiftMgtDbContext.Entities.Comment()
             {
                 ShiftID= comment.ShiftID,
@@ -99,7 +141,7 @@ namespace ET_ShiftManagementSystem.Controllers
                 return NotFound();
             }
 
-            var DeleteDTO = new Models.Comment()
+            var DeleteDTO = new Models.CommentDTO()
             {
 
                 CommentText = delete.CommentText,

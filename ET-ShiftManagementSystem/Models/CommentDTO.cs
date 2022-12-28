@@ -1,6 +1,6 @@
 ﻿namespace ET_ShiftManagementSystem.Models
 {
-    public class Comment
+    public class CommentDTO
     {
         public int CommentID { get; set; }
 
