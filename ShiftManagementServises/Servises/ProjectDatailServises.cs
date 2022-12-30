@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations.Operations;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using ShiftMgtDbContext.Data;
 using ShiftMgtDbContext.Entities;
 using System;
@@ -11,7 +12,7 @@ namespace ShiftManagementServises.Servises
 {
     public interface IProjectDatailServises
     {
-        List<ProjectDetail> GetProjecDetails(int ProjectId);
+        Task<IEnumerable<ProjectDetail>> GetProjecDetails();
     }
     public class ProjectDatailServises : IProjectDatailServises
     {
@@ -20,11 +21,10 @@ namespace ShiftManagementServises.Servises
         {
             _shiftDbContext = shiftDbContext;
         }
-        public List<ProjectDetail> GetProjecDetails(int ProjectID)
+        public async Task<IEnumerable<ProjectDetail>> GetProjecDetails()
         {
 
-            return _shiftDbContext.projectDetails.Where(pro => pro.ProjectDetailsID == ProjectID)
-                .ToList();
+            return await _shiftDbContext.projectDetails.Include(x => x.project).Include(y => y.shift).ToListAsync();
         }
 
 

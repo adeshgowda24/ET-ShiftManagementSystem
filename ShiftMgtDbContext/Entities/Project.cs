@@ -32,11 +32,9 @@ namespace ShiftMgtDbContext.Entities
         //public virtual ProjectDetail ProjectDetail { get; set; }
 
         //navigation property
-        //public User user { get; set; }
+        //public IEnumerable<ProjectDetail> projectDetails { get; set; }
 
-        //public Comment comment { get; set; }
-
-        //public Shift shift { get; set; }
+        
 
     }
 }

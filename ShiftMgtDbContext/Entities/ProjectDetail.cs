@@ -14,11 +14,6 @@ namespace ShiftMgtDbContext.Entities
         public int ProjectDetailsID { get; set; }
 
         
-        public int ProjectId { get; set;}
-
-        
-        public int UserID { get; set; }
-
         public string CreatedBy { get; set; }
 
         public DateTime CreatedDate { get; set;}
@@ -29,6 +24,15 @@ namespace ShiftMgtDbContext.Entities
 
         public bool IsActive { get; set; }
 
-        public int? ShiftID { get; set; }    
+        public int? ShiftID { get; set; }
+        public int ProjectId { get; set; }
+
+
+        public int UserID { get; set; }
+
+        //navigation property 
+        public Project project { get; set; }
+
+        public Shift shift { get; set; }
     }
 }

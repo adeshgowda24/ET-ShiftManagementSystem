@@ -31,26 +31,26 @@ namespace ET_ShiftManagementSystem.Controllers
             _commentServices = commentServices;
             this.mapper = mapper;
         }
-        [Route("Details/{projectId}")]
-        [HttpGet]
+        //[Route("Details/{projectId}")]
+        //[HttpGet]
         //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetProjectDetails(int projectId)
-        {
-            var projectDetailsData = new ProjectDetailsDTO();
-            var projectdetail = await _projectServices.GetProject(projectId);
-            projectDetailsData.ProjectName= projectdetail.ProjectName;
-            projectDetailsData.ClientName= projectdetail.ClientName;
-            projectDetailsData.Description = projectdetail.Description;
-            projectDetailsData.ProjectID = projectId;
-            var projectData = _projectDatailServises.GetProjecDetails(projectId);
+       // public async Task<IActionResult> GetProjectDetails(int projectId)
+        //{
+            //var projectDetailsData = new ProjectDetailsDTO();
+            //var projectdetail = await _projectServices.GetProject(projectId);
+            //projectDetailsData.ProjectName= projectdetail.ProjectName;
+            //projectDetailsData.ClientName= projectdetail.ClientName;
+            //projectDetailsData.Description = projectdetail.Description;
+            //projectDetailsData.ProjectID = projectId;
+            ////var projectData = _projectDatailServises.GetProjecDetails(projectId);
 
 
-            //var CommentDetail = await _commentServices.GetComment(projectId);
+            ////var CommentDetail = await _commentServices.GetComment(projectId);
 
-            var ShiftDetail = _shiftServices.GetShiftDetails(projectId);
+            //var ShiftDetail = _shiftServices.GetShiftDetails(projectId);
             
-            foreach ( var item in projectData)
-            {
+            //foreach ( var item in projectData)
+            //{
                 //var userDetail = _userServices.GetUserDetails(item.UserID);
                 //var projectUser = new ProjectUser()
                 //{
@@ -74,7 +74,7 @@ namespace ET_ShiftManagementSystem.Controllers
                 //projectDetailsData.ProjectUsers.Add(projectUser);
 
                 
-            }
+            //}
             ////foreach (var value in CommentDetail)
             //{
             //    var Comment = _commentServices.GetComment(value.CommentID);
@@ -91,8 +91,8 @@ namespace ET_ShiftManagementSystem.Controllers
             //}
                 
 
-            return Ok(projectDetailsData);
-        }
+            //return Ok(projectDetailsData);
+        //}
 
         [HttpGet]
         [Route("/allProject")]

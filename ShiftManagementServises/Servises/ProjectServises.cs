@@ -55,8 +55,8 @@ namespace Servises.ProjectServises
 
         public async  Task<IEnumerable<Project>> GetAllAsync()
         {
-            return await _shiftDbContext.projects/*.Include(x => x.user).
-                Include(x => x.shift).
+            return await _shiftDbContext.projects /*.Include(x => x.user)
+               Include(x => x.shift).
                 Include(x => x.comment)*/
                 .ToListAsync();
         }

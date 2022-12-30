@@ -63,5 +63,8 @@ namespace ShiftMgtDbContext.Entities
         public bool IsActive { get; set; }
 
         public List<User_Role> UserRoles { get; set; }
+
+        //navigaion property 
+        public Project Project { get; set; }
     }
 }

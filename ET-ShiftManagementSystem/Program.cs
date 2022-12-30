@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using ShiftMgtDbContext.Entities;
 using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -86,10 +87,16 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 
 //for entity framework
-builder.Services.AddDbContext<ShiftManagementDbContext>(option => option.UseSqlServer
-(builder.Configuration.GetConnectionString("ProjectAPIConnectioString")));
+builder.Services.AddDbContext<ShiftManagementDbContext>(option =>
+{
+    option.UseSqlServer
+    (builder.Configuration.GetConnectionString("ProjectAPIConnectioString"),
+    sqlServerOptionsAction: sqlOperation =>
+    {
+        sqlOperation.EnableRetryOnFailure();
+    });
 
-
+});
 
 builder.Services.AddScoped<ITokenHandler, ShiftManagementServises.Servises.TokenHandler>();
 
